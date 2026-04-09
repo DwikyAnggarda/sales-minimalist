@@ -25,7 +25,7 @@ RUN docker-php-ext-install \
     opcache
 
 # Install Redis extension (untuk Predis, ini opsional tapi recommended)
-RUN pecl install redis && docker-php-ext-enable redis
+# RUN pecl install redis && docker-php-ext-enable redis
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
