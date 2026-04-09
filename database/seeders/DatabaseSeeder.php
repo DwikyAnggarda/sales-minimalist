@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
+use App\Models\Store;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +15,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Admin User
+        User::updateOrCreate(
+            ['email' => 'admin@gmail.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('12345678'),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Branches and Stores
+        $branches = ['Branch Jakarta', 'Branch Bandung', 'Branch Surabaya'];
+
+        foreach ($branches as $branchName) {
+            $branch = Branch::create(['name' => $branchName]);
+
+            for ($i = 1; $i <= 3; $i++) {
+                Store::create([
+                    'branch_id' => $branch->id,
+                    'name' => "Store $i - $branchName",
+                ]);
+            }
+        }
     }
 }
