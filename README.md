@@ -3,7 +3,7 @@
 > A Business Intelligence Sales Dashboard built with the **TALL Stack** (Tailwind CSS, Alpine.js, Laravel, Livewire).  
 > Designed for multi-branch retail operations — providing real-time KPI monitoring, interactive data visualization, and full CRUD sales management via a reactive single-page interface.
 
-[![PHP](https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white)](https://php.net)
+[![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)](https://php.net)
 [![Laravel](https://img.shields.io/badge/Laravel-13.x-FF2D20?logo=laravel&logoColor=white)](https://laravel.com)
 [![Livewire](https://img.shields.io/badge/Livewire-4.x-FB70A9?logo=livewire&logoColor=white)](https://livewire.laravel.com)
 [![Flux UI](https://img.shields.io/badge/Flux_UI-2.x-6C63FF)](https://fluxui.dev)
@@ -237,7 +237,7 @@ Or using the Pest binary directly:
 Railway menggunakan **[Railpack](https://railpack.com)** sebagai builder default — sebuah zero-config builder yang otomatis mendeteksi aplikasi Laravel dan menangani seluruh proses build tanpa file konfigurasi tambahan.
 
 > **Apa yang Railpack lakukan secara otomatis:**
-> - Mendeteksi PHP version dari `composer.json` (`^8.3`)
+> - Mendeteksi PHP version dari `composer.json` (`^8.4`)
 > - Menginstall semua PHP extensions yang dibutuhkan
 > - Menjalankan `composer install --no-dev --optimize-autoloader`
 > - Menjalankan `npm install && npm run build` (Vite assets)
