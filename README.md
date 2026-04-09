@@ -232,93 +232,108 @@ Or using the Pest binary directly:
 
 ---
 
-## 🚂 Deployment Guide (Railway.app)
+## 🚂 Deployment Guide (Railway.app + Railpack)
 
-This repository is pre-configured for one-click deployment to [Railway.app](https://railway.app) via `nixpacks.toml` and `Procfile`.
+Railway menggunakan **[Railpack](https://railpack.com)** sebagai builder default — sebuah zero-config builder yang otomatis mendeteksi aplikasi Laravel dan menangani seluruh proses build tanpa file konfigurasi tambahan.
 
-### Step 1: Create a New Railway Project
+> **Apa yang Railpack lakukan secara otomatis:**
+> - Mendeteksi PHP version dari `composer.json` (`^8.3`)
+> - Menginstall semua PHP extensions yang dibutuhkan
+> - Menjalankan `composer install --no-dev --optimize-autoloader`
+> - Menjalankan `npm install && npm run build` (Vite assets)
+> - Menjalankan `php artisan migrate --force` saat startup
+> - Menjalankan `php artisan optimize` (config, route, view cache)
+> - Menjalankan web server menggunakan **FrankenPHP**
 
-1. Go to [railway.app](https://railway.app) and log in.
-2. Click **"New Project"** → **"Deploy from GitHub repo"**.
-3. Select this repository from your GitHub account.
+### Step 1: Buat Railway Project Baru
 
-### Step 2: Add a Managed PostgreSQL Database
+1. Buka [railway.app](https://railway.app) dan login.
+2. Klik **"New Project"** → **"Deploy from GitHub repo"**.
+3. Pilih repository ini dari akun GitHub kamu.
+4. Di **Build settings**, pastikan builder diset ke **Railpack**.
 
-1. In your Railway project, click **"+ Add"** → **"Database"** → **"PostgreSQL"**.
-2. Railway will automatically inject `DATABASE_URL` into your service's environment.
+### Step 2: Tambahkan Managed PostgreSQL
 
-### Step 3: Add a Managed Redis Instance
+1. Di dalam project Railway, klik **"+ Add"** → **"Database"** → **"PostgreSQL"**.
+2. Railway secara otomatis menginjek `DATABASE_URL` ke environment service kamu.
 
-1. Click **"+ Add"** → **"Database"** → **"Redis"**.
-2. Railway will automatically inject `REDIS_URL` into your service's environment.
+### Step 3: Tambahkan Managed Redis
 
-### Step 4: Configure Environment Variables
+1. Klik **"+ Add"** → **"Database"** → **"Redis"**.
+2. Railway secara otomatis menginjek `REDIS_URL` ke environment service kamu.
 
-In your web service's **"Variables"** tab, add the following environment variables. Railway's managed services provide connection URLs automatically — map them to Laravel's expected variables as shown below.
+### Step 4: Set Environment Variables
 
-#### Required Variables
+Buka tab **"Variables"** di service aplikasimu dan tambahkan variabel-variabel berikut:
 
-| Variable | Value | Notes |
+#### Application
+
+| Variable | Value | Keterangan |
 |---|---|---|
-| `APP_NAME` | `Sales Dashboard` | Display name of the application |
-| `APP_ENV` | `production` | **Must** be `production` in Railway |
-| `APP_KEY` | *(generate below)* | Run `php artisan key:generate --show` locally |
-| `APP_DEBUG` | `false` | **Must** be `false` in production |
-| `APP_URL` | `https://your-app.up.railway.app` | Your Railway-provided public URL |
+| `APP_NAME` | `Sales Dashboard` | Nama aplikasi |
+| `APP_ENV` | `production` | **Wajib** `production` di Railway |
+| `APP_KEY` | `base64:...` | Generate lokal: `php artisan key:generate --show` |
+| `APP_DEBUG` | `false` | **Wajib** `false` di production |
+| `APP_URL` | `https://your-app.up.railway.app` | URL public dari Railway (setelah domain di-generate) |
 
-#### Database Variables
+#### Database (PostgreSQL)
 
-| Variable | Value | Notes |
+| Variable | Value | Keterangan |
 |---|---|---|
 | `DB_CONNECTION` | `pgsql` | |
-| `DB_URL` | `${{Postgres.DATABASE_URL}}` | Railway reference variable — auto-injects the managed PostgreSQL URL |
+| `DB_URL` | `${{Postgres.DATABASE_URL}}` | Railway reference variable — otomatis terhubung ke managed Postgres |
 
-> Alternatively, expand `DATABASE_URL` into individual components:  
-> `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`
+#### Redis
 
-#### Redis Variables
-
-| Variable | Value | Notes |
+| Variable | Value | Keterangan |
 |---|---|---|
-| `REDIS_URL` | `${{Redis.REDIS_URL}}` | Railway reference variable — auto-injects the managed Redis URL |
-| `REDIS_CLIENT` | `predis` | `predis` is included via Composer; no extension needed |
+| `REDIS_URL` | `${{Redis.REDIS_URL}}` | Railway reference variable — otomatis terhubung ke managed Redis |
+| `REDIS_CLIENT` | `predis` | `predis` sudah termasuk via Composer, tanpa perlu PHP extension |
 | `SESSION_DRIVER` | `redis` | |
 | `CACHE_STORE` | `redis` | |
 | `QUEUE_CONNECTION` | `redis` | |
 
-> **How `REDIS_URL` works:** When `REDIS_URL` is set, Laravel's Redis configuration automatically parses the hostname, port, and password from the URL, overriding the individual `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD` values. No manual parsing is required.
+#### PHP Extensions (Railpack)
 
-#### Application Variables
-
-| Variable | Value | Notes |
+| Variable | Value | Keterangan |
 |---|---|---|
-| `LOG_CHANNEL` | `errorlog` | Directs logs to Railway's log stream |
-| `SESSION_LIFETIME` | `120` | Session expiry in minutes |
-| `BCRYPT_ROUNDS` | `12` | Password hashing cost |
+| `RAILPACK_PHP_EXTENSIONS` | `redis,pdo_pgsql,bcmath,gd` | Ekstensi tambahan yang diinstall Railpack |
 
-### Step 5: Deploy
+> **Cara kerja `REDIS_URL`:** Saat `REDIS_URL` di-set, Laravel secara otomatis mem-parse hostname, port, dan password dari URL tersebut, meng-override nilai `REDIS_HOST`, `REDIS_PORT`, dan `REDIS_PASSWORD`. Tidak perlu konfigurasi manual.
 
-After setting all environment variables, Railway will automatically trigger a new build. The `nixpacks.toml` will:
+#### Logging
 
-1. Install PHP 8.3 with the `redis`, `pdo_pgsql`, and all required extensions.
-2. Run `composer install --no-dev --optimize-autoloader`.
-3. Run `npm ci && npm run build` to compile Vite assets.
-4. Cache config, routes, and views via `php artisan config:cache`, etc.
-5. **Run `php artisan migrate --force`** automatically before starting the server.
+| Variable | Value | Keterangan |
+|---|---|---|
+| `LOG_CHANNEL` | `errorlog` | Arahkan log ke Railway's log stream |
 
-### Step 6: Seed Initial Data (One-time)
+### Step 5: Generate Domain Publik
 
-After the first successful deployment, open a Railway shell (via the **"Shell"** tab in your service) and run:
+Setelah deployment berhasil, buka **Settings → Networking** dan klik **"Generate Domain"** untuk mendapatkan URL publik.
+
+### Step 6: Seed Data Awal (One-time)
+
+Setelah deployment pertama berhasil, buka **Railway Shell** (tab "Shell" di service) dan jalankan:
 
 ```bash
 php artisan db:seed
 ```
 
-This creates the admin user and branch/store structure required for the dashboard to function.
+Ini akan membuat admin user dan struktur branch/store yang diperlukan dashboard.
 
-### Step 7: Verify Deployment
+### Step 7: Aktifkan Scheduler (Cron Job)
 
-Visit your Railway-provided URL. You should be redirected to the login page. Log in with:
+Untuk menjalankan Laravel Scheduler di Railway, **duplikasi** service aplikasimu (bukan buat service baru), lalu ubah **Custom Start Command**-nya menjadi:
+
+```bash
+php artisan schedule:work
+```
+
+> Railpack tidak menjalankan scheduler secara otomatis. Service terpisah diperlukan agar web server dan scheduler berjalan independen tanpa saling mengganggu.
+
+### Step 8: Verifikasi Deployment
+
+Kunjungi URL Railway-mu. Kamu akan di-redirect ke halaman login. Masuk dengan:
 
 - **Email:** `admin@gmail.com`
 - **Password:** `12345678`
@@ -337,6 +352,8 @@ app/
 │   ├── Branch.php
 │   ├── Store.php
 │   └── Sale.php
+├── Providers/
+│   └── AppServiceProvider.php    # Forces HTTPS in production (required for Railway/FrankenPHP)
 
 database/
 ├── migrations/                   # Schema for branches, stores, sales tables
@@ -352,13 +369,13 @@ tests/
 │   ├── DashboardTest.php         # Route access & auth gate tests
 │   └── Livewire/                 # Livewire component tests
 └── Pest.php                      # Global test configuration
-
-nixpacks.toml                     # Railway build configuration (PHP 8.3 + Redis)
-Procfile                          # Railway process definitions (web + queue worker)
 ```
+
+> **Tidak ada `nixpacks.toml` atau `Procfile`** — Railpack menangani semua build steps secara otomatis berdasarkan deteksi kode Laravel.
 
 ---
 
 ## 📄 License
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
