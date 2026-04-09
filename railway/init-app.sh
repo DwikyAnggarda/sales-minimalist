@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-php artisan migrate --force
+php artisan migrate --force --seed
 php artisan storage:link --force
 php artisan optimize:clear
 php artisan config:cache
