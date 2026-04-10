@@ -1,10 +1,17 @@
 #!/bin/sh
 set -e
 
-echo "==> Running migrations..."
-php artisan migrate --force
+echo "==> Production Mode: Laravel 13"
 
-echo "==> Caching config, routes, and views..."
+# 1. Bersihkan semua cache lama agar environment variable baru terbaca
+php artisan optimize:clear
+
+# 2. Migrasi database & Seed (Flag --force wajib di production)
+# Pastikan DatabaseSeeder kamu menggunakan updateOrCreate agar tidak duplikat saat redeploy
+php artisan migrate --force --seed
+
+# 3. Laravel 13 Single Command Optimization
+# Ini akan meng-cache config, routes, dan views secara sekaligus
 php artisan optimize
 
 echo "==> Starting supervisord..."
