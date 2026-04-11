@@ -8,7 +8,7 @@ php artisan optimize:clear
 
 # 2. Migrasi database & Seed (Flag --force wajib di production)
 # Pastikan DatabaseSeeder kamu menggunakan updateOrCreate agar tidak duplikat saat redeploy
-php artisan migrate --force --seed
+php artisan migrate --force
 
 # 3. Laravel 13 Single Command Optimization
 # Ini akan meng-cache config, routes, dan views secara sekaligus

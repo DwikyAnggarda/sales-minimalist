@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#684000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#4f46e5",
+                        "surface-container": "#e6eeff",
+                        "on-tertiary-fixed": "#2a1700",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-high": "#dee9fc",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2dfff",
+                        "outline-variant": "#c7c4d8",
+                        "on-surface": "#121c2a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#00714d",
+                        "surface-variant": "#d9e3f6",
+                        "on-background": "#121c2a",
+                        "inverse-primary": "#c3c0ff",
+                        "on-tertiary-container": "#ffd4a4",
+                        "inverse-surface": "#27313f",
+                        "surface-dim": "#d0dbed",
+                        "primary": "#3525cd",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface": "#f8f9ff",
+                        "surface-bright": "#f8f9ff",
+                        "surface-container-low": "#eff4ff",
+                        "error": "#ba1a1a",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "background": "#f8f9ff",
+                        "surface-container-highest": "#d9e3f6",
+                        "on-primary-fixed": "#0f0069",
+                        "tertiary-container": "#885500",
+                        "surface-tint": "#4d44e3",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary": "#006c49",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-surface-variant": "#464555",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-secondary-fixed": "#002113",
+                        "outline": "#777587",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#653e00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+
+        .font-manrope {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, #3525cd 0%, #4f46e5 100%);
+            border: none;
+        }
+
+        .btn-outline-custom {
+            border: 1px solid #c7c4d8;
+            color: #464555;
+            background: #ffffff;
+        }
+
+        .btn-outline-custom:hover {
+            background: #f8f9ff;
+            border-color: #3525cd;
+            color: #3525cd;
+        }
+    </style>
+</head>
+
+<body class="text-on-surface">
+    <!-- SideNavBar Anchor -->
+    <aside class="fixed left-0 top-0 h-full flex flex-col p-4 h-screen w-64 bg-indigo-50/50 dark:bg-slate-900/50 z-50">
+        <div class="mb-10 px-4">
+            <h1 class="text-xl font-bold tracking-tighter text-indigo-900 dark:text-indigo-100 font-manrope" style="">
+                The Atelier</h1>
+            <p class="text-xs font-medium text-slate-500 uppercase tracking-widest mt-1" style="">Sales Ledger</p>
+        </div>
+        <nav class="flex-1 space-y-2">
+            <!-- Active Tab: Dashboard -->
+            <a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-lg shadow-sm font-bold scale-95 transition-transform font-manrope text-sm tracking-tight"
+                href="#" style="">
+                <span class="material-symbols-outlined" data-icon="dashboard" style="">dashboard</span>
+                Dashboard
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors duration-200 font-manrope text-sm font-semibold tracking-tight"
+                href="#" style="">
+                <span class="material-symbols-outlined" data-icon="analytics" style="">analytics</span>
+                Analytics
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors duration-200 font-manrope text-sm font-semibold tracking-tight"
+                href="#" style="">
+                <span class="material-symbols-outlined" data-icon="storefront" style="">storefront</span>
+                Branches
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors duration-200 font-manrope text-sm font-semibold tracking-tight"
+                href="#" style="">
+                <span class="material-symbols-outlined" data-icon="receipt_long" style="">receipt_long</span>
+                Transactions
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition-colors duration-200 font-manrope text-sm font-semibold tracking-tight"
+                href="#" style="">
+                <span class="material-symbols-outlined" data-icon="settings" style="">settings</span>
+                Settings
+            </a>
+        </nav>
+        <div class="mt-auto p-4">
+        </div>
+    </aside>
+    <!-- Main Canvas -->
+    <main class="ml-64 min-h-screen">
+        <!-- TopAppBar Anchor -->
+        <header
+            class="flex justify-between items-center w-full px-8 py-4 sticky top-0 bg-white/70 backdrop-blur-md z-40">
+            <div class="flex items-center gap-8">
+                <span class="text-lg font-black text-slate-900 font-manrope" style="">The Analytical Atelier</span>
+                <div class="hidden md:flex gap-6">
+                    <a class="text-indigo-700 font-bold border-b-2 border-indigo-700 font-manrope text-sm" href="#"
+                        style="">Overview</a>
+                    <a class="text-slate-500 hover:text-indigo-600 transition-all font-manrope text-sm" href="#"
+                        style="">Regional</a>
+                    <a class="text-slate-500 hover:text-indigo-600 transition-all font-manrope text-sm" href="#"
+                        style="">Forecast</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="p-2 text-slate-500 hover:text-indigo-600 transition-all opacity-80 active:scale-98"
+                    style="">
+                    <span class="material-symbols-outlined" data-icon="notifications" style="">notifications</span>
+                </button>
+                <button class="p-2 text-slate-500 hover:text-indigo-600 transition-all opacity-80 active:scale-98"
+                    style="">
+                    <span class="material-symbols-outlined" data-icon="calendar_today" style="">calendar_today</span>
+                </button>
+                <div
+                    class="h-10 w-10 rounded-full overflow-hidden ml-2 bg-surface-container-high border-2 border-white shadow-sm">
+                    <img alt="Administrator"
+                        data-alt="Professional portrait of a male executive in a sleek modern office setting, soft natural lighting, high-end editorial feel"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-9E_Kyw4TLwA-S6Y65lO7B8VwASjgoxG5UpJL6ANb5-VsLAiW-wAJZUEBrgYz4D5b6WQ8KJut9MEay08ZftRaWDUd7gaZGFV1wen-G3RMRqmcMNzt3V-Y5E4a3MGyrfz_ATeuWutmYThHjM13dUZ8tcsbBIjUnVc90ipEFpw6VU-1XQmnN05DOQvHlKq5pjw7ZVqzXH07BrwNtpCQCmyNIIQkCVzpmsPOax-_4qpUHEApBa38LJ_LyHaTl2g826hHpnLdVFR7JDI"
+                        class="" style="">
+                </div>
+            </div>
+        </header>
+        <!-- Dashboard Content -->
+        <div class="p-8 max-w-7xl mx-auto space-y-10">
+            <!-- Page Header & Filters -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h2 class="text-4xl font-extrabold font-manrope text-on-surface tracking-tight" style="">Sales
+                        Analytics</h2>
+                    <p class="text-on-surface-variant mt-2 max-w-md" style="">Comprehensive performance overview across
+                        regional branches and order volume metrics.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 bg-surface-container-low p-2 rounded-xl">
+                    <div class="flex flex-col px-3">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-outline mb-1"
+                            style="">From</label>
+                        <input class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 cursor-pointer"
+                            type="date">
+                    </div>
+                    <div class="w-px h-8 bg-outline-variant/30"></div>
+                    <div class="flex flex-col px-3">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-outline mb-1"
+                            style="">To</label>
+                        <input class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 cursor-pointer"
+                            type="date">
+                    </div>
+                    <div class="w-px h-8 bg-outline-variant/30"></div>
+                    <div class="flex flex-col px-3">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-outline mb-1"
+                            style="">Branch</label>
+                        <select
+                            class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 cursor-pointer pr-8">
+                            <option>All Branches</option>
+                            <option>Jakarta</option>
+                            <option>Surabaya</option>
+                            <option>Bandung</option>
+                        </select>
+                    </div>
+                    <div class="w-px h-8 bg-outline-variant/30"></div>
+                    <button
+                        class="bg-white p-2.5 rounded-lg shadow-sm hover:shadow-md transition-shadow text-primary flex items-center justify-center"
+                        style="">
+                        <span class="material-symbols-outlined text-xl" data-icon="refresh" style="">refresh</span>
+                    </button>
+                </div>
+            </div>
+            <!-- KPI Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-primary/10 rounded-lg text-primary">
+                            <span class="material-symbols-outlined" data-icon="payments" style="">payments</span>
+                        </div>
+                        <span class="text-xs font-bold text-secondary flex items-center gap-1" style=""><br><span
+                                class="material-symbols-outlined text-xs" data-icon="trending_up"
+                                style="">trending_up</span>
+                        </span>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1" style="">Total
+                        Revenue</p>
+                    <h3 class="text-2xl font-black font-manrope text-on-surface" style="">Rp 282.169.745</h3>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-secondary/10 rounded-lg text-secondary">
+                            <span class="material-symbols-outlined" data-icon="shopping_bag"
+                                style="">shopping_bag</span>
+                        </div>
+                        <span class="text-xs font-bold text-on-surface-variant" style=""><br></span>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1" style="">Total
+                        Transactions</p>
+                    <h3 class="text-2xl font-black font-manrope text-on-surface" style="">61</h3>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-tertiary/10 rounded-lg text-tertiary">
+                            <span class="material-symbols-outlined" data-icon="calculate" style="">calculate</span>
+                        </div>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1" style="">Avg.
+                        Order Value</p>
+                    <h3 class="text-2xl font-black font-manrope text-on-surface" style="">Rp 4.625.734</h3>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="p-2 bg-primary-container/10 rounded-lg text-primary-container">
+                            <span class="material-symbols-outlined" data-icon="stars"
+                                style="font-variation-settings: &quot;FILL&quot; 1;">stars</span>
+                        </div>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-1" style="">Top
+                        Store</p>
+                    <h3 class="text-xl font-black font-manrope text-on-surface leading-tight" style="">Store 3</h3>
+                    <p class="text-xs font-medium text-on-surface-variant" style="">Branch Jakarta</p>
+                </div>
+            </div>
+            <!-- Bento Charts Section -->
+            <div class="grid grid-cols-12 gap-6">
+                <!-- Revenue Trend -->
+                <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-10 rounded-xl shadow-sm">
+                    <div class="flex items-center justify-between mb-10">
+                        <div>
+                            <h4 class="text-xl font-bold font-manrope" style="">Revenue Trend</h4>
+                            <p class="text-sm text-on-surface-variant" style="">Daily growth visualization</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="px-3 py-1 text-xs font-bold rounded-full bg-primary/10 text-primary"
+                                style="">Daily</button>
+                            <button
+                                class="px-3 py-1 text-xs font-bold rounded-full text-on-surface-variant hover:bg-surface-container"
+                                style="">Weekly</button>
+                        </div>
+                    </div>
+                    <!-- Mock Chart Visualization -->
+                    <div class="h-64 flex items-end justify-between gap-2">
+                        <div
+                            class="w-full bg-surface-container rounded-t-lg h-[40%] hover:bg-primary/20 transition-colors">
+                        </div>
+                        <div
+                            class="w-full bg-surface-container rounded-t-lg h-[65%] hover:bg-primary/20 transition-colors">
+                        </div>
+                        <div class="w-full bg-primary-container rounded-t-lg h-[85%]"></div>
+                        <div
+                            class="w-full bg-surface-container rounded-t-lg h-[55%] hover:bg-primary/20 transition-colors">
+                        </div>
+                        <div
+                            class="w-full bg-surface-container rounded-t-lg h-[75%] hover:bg-primary/20 transition-colors">
+                        </div>
+                        <div
+                            class="w-full bg-surface-container rounded-t-lg h-[45%] hover:bg-primary/20 transition-colors">
+                        </div>
+                        <div
+                            class="w-full bg-surface-container rounded-t-lg h-[95%] hover:bg-primary/20 transition-colors">
+                        </div>
+                        <div
+                            class="w-full bg-surface-container rounded-t-lg h-[60%] hover:bg-primary/20 transition-colors">
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-4 text-[10px] font-bold text-outline uppercase tracking-wider">
+                        <span class="" style="">Mon</span><span class="" style="">Tue</span><span class=""
+                            style="">Wed</span><span class="" style="">Thu</span><span class="" style="">Fri</span><span
+                            class="" style="">Sat</span><span class="" style="">Sun</span><span class=""
+                            style="">Mon</span>
+                    </div>
+                </div>
+                <!-- Revenue Distribution List -->
+                <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-10 rounded-xl shadow-sm">
+                    <h4 class="text-xl font-bold font-manrope mb-8" style="">Branch Performance</h4>
+                    <div class="space-y-8">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-on-surface" style="">Jakarta</span>
+                                <span class="text-sm font-black text-primary" style="">45%</span>
+                            </div>
+                            <div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bg-primary w-[45%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-on-surface" style="">Surabaya</span>
+                                <span class="text-sm font-black text-secondary" style="">30%</span>
+                            </div>
+                            <div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bg-secondary w-[30%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-on-surface" style="">Bandung</span>
+                                <span class="text-sm font-black text-tertiary" style="">25%</span>
+                            </div>
+                            <div class="w-full h-2 bg-surface-container rounded-full overflow-hidden">
+                                <div class="h-full bg-tertiary w-[25%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-12 p-6 bg-surface-container-low rounded-xl">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="h-12 w-12 rounded-lg bg-white flex items-center justify-center text-tertiary shadow-sm">
+                                <span class="material-symbols-outlined" data-icon="insights" style="">insights</span>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase text-on-surface-variant" style="">Market
+                                    Insight</p>
+                                <p class="text-xs font-medium text-on-surface mt-1" style="">Jakarta sales are leading
+                                    by 15% vs previous cycle.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Transactions Table Section -->
+            <div
+                class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/10">
+                <div class="p-8 flex items-center justify-between bg-surface-container-lowest">
+                    <div>
+                        <h4 class="text-2xl font-black font-manrope" style="">Recent Transactions</h4>
+                        <p class="text-sm text-on-surface-variant" style="">Detailed log of the latest 61 sales entries
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button
+                            class="btn-outline-custom px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 transition-all"
+                            style="">
+                            <span class="material-symbols-outlined text-lg" data-icon="picture_as_pdf"
+                                style="">picture_as_pdf</span>
+                            Export PDF
+                        </button>
+                        <button
+                            class="btn-outline-custom px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 transition-all"
+                            style="">
+                            <span class="material-symbols-outlined text-lg" data-icon="table_chart"
+                                style="">table_chart</span>
+                            Export Excel
+                        </button>
+                        <button
+                            class="btn-primary-gradient px-6 py-2.5 rounded-lg text-white font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-all"
+                            style="">
+                            <span class="material-symbols-outlined text-lg" data-icon="add" style="">add</span>
+                            Add New Sale
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-surface-container-low text-on-surface-variant">
+                                <th class="px-8 py-4 text-xs font-bold uppercase tracking-widest" style="">Date</th>
+                                <th class="px-8 py-4 text-xs font-bold uppercase tracking-widest" style="">Store/Branch
+                                </th>
+                                <th class="px-8 py-4 text-xs font-bold uppercase tracking-widest" style="">Amount</th>
+                                <th class="px-8 py-4 text-xs font-bold uppercase tracking-widest" style="">Status</th>
+                                <th class="px-8 py-4 text-xs font-bold uppercase tracking-widest text-right" style="">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant/20">
+                            <tr class="hover:bg-surface-container-low transition-colors group">
+                                <td class="px-8 py-5 text-sm font-medium" style="">Oct 24, 2023</td>
+                                <td class="px-8 py-5" style="">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-8 w-8 rounded bg-primary/5 flex items-center justify-center text-primary">
+                                            <span class="material-symbols-outlined text-sm" data-icon="store"
+                                                style="">store</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold" style="">Store 3</p>
+                                            <p class="text-[10px] text-on-surface-variant" style="">Jakarta</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5 text-sm font-black text-on-surface" style="">Rp 12.450.000</td>
+                                <td class="px-8 py-5" style="">
+                                    <span
+                                        class="px-2 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full"
+                                        style="">Completed</span>
+                                </td>
+                                <td class="px-8 py-5 text-right space-x-2" style="">
+                                    <button
+                                        class="p-2 hover:bg-white rounded-lg text-outline hover:text-primary transition-all"
+                                        style="">
+                                        <span class="material-symbols-outlined text-xl" data-icon="edit"
+                                            style="">edit</span>
+                                    </button>
+                                    <button
+                                        class="p-2 hover:bg-white rounded-lg text-outline hover:text-error transition-all"
+                                        style="">
+                                        <span class="material-symbols-outlined text-xl" data-icon="delete"
+                                            style="">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-low transition-colors">
+                                <td class="px-8 py-5 text-sm font-medium" style="">Oct 24, 2023</td>
+                                <td class="px-8 py-5" style="">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-8 w-8 rounded bg-secondary/5 flex items-center justify-center text-secondary">
+                                            <span class="material-symbols-outlined text-sm" data-icon="store"
+                                                style="">store</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold" style="">Store 1</p>
+                                            <p class="text-[10px] text-on-surface-variant" style="">Surabaya</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5 text-sm font-black text-on-surface" style="">Rp 8.900.000</td>
+                                <td class="px-8 py-5" style="">
+                                    <span
+                                        class="px-2 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full"
+                                        style="">Completed</span>
+                                </td>
+                                <td class="px-8 py-5 text-right space-x-2" style="">
+                                    <button
+                                        class="p-2 hover:bg-white rounded-lg text-outline hover:text-primary transition-all"
+                                        style="">
+                                        <span class="material-symbols-outlined text-xl" data-icon="edit"
+                                            style="">edit</span>
+                                    </button>
+                                    <button
+                                        class="p-2 hover:bg-white rounded-lg text-outline hover:text-error transition-all"
+                                        style="">
+                                        <span class="material-symbols-outlined text-xl" data-icon="delete"
+                                            style="">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-surface-container-low transition-colors">
+                                <td class="px-8 py-5 text-sm font-medium" style="">Oct 23, 2023</td>
+                                <td class="px-8 py-5" style="">
+                                    <div class="flex items-center gap-3">
+                                        <div
+                                            class="h-8 w-8 rounded bg-tertiary/5 flex items-center justify-center text-tertiary">
+                                            <span class="material-symbols-outlined text-sm" data-icon="store"
+                                                style="">store</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold" style="">Store 5</p>
+                                            <p class="text-[10px] text-on-surface-variant" style="">Bandung</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-8 py-5 text-sm font-black text-on-surface" style="">Rp 5.230.000</td>
+                                <td class="px-8 py-5" style="">
+                                    <span
+                                        class="px-2 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-full"
+                                        style="">Pending</span>
+                                </td>
+                                <td class="px-8 py-5 text-right space-x-2" style="">
+                                    <button
+                                        class="p-2 hover:bg-white rounded-lg text-outline hover:text-primary transition-all"
+                                        style="">
+                                        <span class="material-symbols-outlined text-xl" data-icon="edit"
+                                            style="">edit</span>
+                                    </button>
+                                    <button
+                                        class="p-2 hover:bg-white rounded-lg text-outline hover:text-error transition-all"
+                                        style="">
+                                        <span class="material-symbols-outlined text-xl" data-icon="delete"
+                                            style="">delete</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="p-8 bg-surface-container-low flex items-center justify-between">
+                    <p class="text-xs font-bold text-on-surface-variant" style="">Showing 1 to 3 of 61 transactions</p>
+                    <div class="flex items-center gap-1">
+                        <button
+                            class="h-8 w-8 flex items-center justify-center rounded bg-white shadow-sm text-outline hover:text-primary"
+                            style="">
+                            <span class="material-symbols-outlined text-sm" data-icon="chevron_left"
+                                style="">chevron_left</span>
+                        </button>
+                        <button
+                            class="h-8 w-8 flex items-center justify-center rounded bg-primary text-white font-bold text-xs"
+                            style="">1</button>
+                        <button
+                            class="h-8 w-8 flex items-center justify-center rounded bg-white shadow-sm text-on-surface font-bold text-xs hover:bg-primary-fixed"
+                            style="">2</button>
+                        <button
+                            class="h-8 w-8 flex items-center justify-center rounded bg-white shadow-sm text-on-surface font-bold text-xs hover:bg-primary-fixed"
+                            style="">3</button>
+                        <span class="px-2 text-outline" style="">...</span>
+                        <button
+                            class="h-8 w-8 flex items-center justify-center rounded bg-white shadow-sm text-on-surface font-bold text-xs hover:bg-primary-fixed"
+                            style="">21</button>
+                        <button
+                            class="h-8 w-8 flex items-center justify-center rounded bg-white shadow-sm text-outline hover:text-primary"
+                            style="">
+                            <span class="material-symbols-outlined text-sm" data-icon="chevron_right"
+                                style="">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom Margin Fix -->
+            <div class="h-10"></div>
+        </div>
+    </main>
+</body>
+
+</html>
