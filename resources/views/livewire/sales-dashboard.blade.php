@@ -10,7 +10,7 @@
 
         <!-- Page Header & Filters -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div class="shrink-0 md:max-w-[160px]">
+            <div class="shrink-0 md:max-w-[500px]">
                 <h2 class="text-2xl sm:text-2xl font-extrabold font-manrope text-base-content tracking-tight">Sales Analytics</h2>
                 <p class="text-base-content/70 mt-1 text-xs leading-relaxed">Comprehensive performance overview across regional branches and order volume metrics.</p>
             </div>
