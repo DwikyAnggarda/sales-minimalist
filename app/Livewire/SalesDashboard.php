@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Branch;
+use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\Sale;
 use App\Models\Store;
 use Illuminate\Support\Facades\DB;
@@ -19,12 +21,14 @@ class SalesDashboard extends Component
     public $startDate;
     public $endDate;
     public $branchId;
+    public $productCategoryId = '';
 
     // Modal state & Form properties
     public $showModal = false;
     public $isEditMode = false;
     public $saleId;
     public $storeId;
+    public $productId = '';
     public $amount;
     public $transactionDate;
 
@@ -32,6 +36,7 @@ class SalesDashboard extends Component
         'startDate' => ['except' => ''],
         'endDate'   => ['except' => ''],
         'branchId'  => ['except' => ''],
+        'productCategoryId' => ['except' => ''],
     ];
 
     public function mount()
@@ -42,14 +47,14 @@ class SalesDashboard extends Component
 
     public function updated($propertyName)
     {
-        if (in_array($propertyName, ['startDate', 'endDate', 'branchId'])) {
+        if (in_array($propertyName, ['startDate', 'endDate', 'branchId', 'productCategoryId'])) {
             $this->resetPage();
         }
     }
 
     public function resetFilters()
     {
-        $this->reset(['startDate', 'endDate', 'branchId']);
+        $this->reset(['startDate', 'endDate', 'branchId', 'productCategoryId']);
         $this->startDate = now()->startOfMonth()->toDateString();
         $this->endDate   = now()->toDateString();
         $this->resetPage();
@@ -61,11 +66,15 @@ class SalesDashboard extends Component
         $end   = $this->endDate   . ' 23:59:59';
 
         // ── Paginated Sales List ─────────────────────────────────────────────
-        $salesQuery = Sale::with('store.branch')
+        $salesQuery = Sale::with('store.branch', 'product.category')
             ->whereBetween('transaction_date', [$start, $end]);
 
         if ($this->branchId) {
             $salesQuery->whereHas('store', fn ($q) => $q->where('branch_id', $this->branchId));
+        }
+
+        if ($this->productCategoryId) {
+            $salesQuery->whereHas('product', fn ($q) => $q->where('product_category_id', $this->productCategoryId));
         }
 
         $sales = $salesQuery->latest('transaction_date')->paginate(10);
@@ -81,6 +90,10 @@ class SalesDashboard extends Component
                 $q->join('stores as s_rev', 'sales.store_id', '=', 's_rev.id')
                   ->where('s_rev.branch_id', $this->branchId)
             )
+            ->when($this->productCategoryId, fn ($q) =>
+                $q->join('products as p_rev', 'sales.product_id', '=', 'p_rev.id')
+                  ->where('p_rev.product_category_id', $this->productCategoryId)
+            )
             ->whereBetween('sales.transaction_date', [$start, $end])
             ->sum('sales.amount');
 
@@ -88,6 +101,10 @@ class SalesDashboard extends Component
             ->when($this->branchId, fn ($q) =>
                 $q->join('stores as s_cnt', 'sales.store_id', '=', 's_cnt.id')
                   ->where('s_cnt.branch_id', $this->branchId)
+            )
+            ->when($this->productCategoryId, fn ($q) =>
+                $q->join('products as p_cnt', 'sales.product_id', '=', 'p_cnt.id')
+                  ->where('p_cnt.product_category_id', $this->productCategoryId)
             )
             ->whereBetween('sales.transaction_date', [$start, $end])
             ->count('sales.id');
@@ -101,6 +118,10 @@ class SalesDashboard extends Component
             ->join('stores', 'sales.store_id', '=', 'stores.id')
             ->whereBetween('sales.transaction_date', [$start, $end])
             ->when($this->branchId, fn ($q) => $q->where('stores.branch_id', $this->branchId))
+            ->when($this->productCategoryId, fn ($q) =>
+                $q->join('products as p_top', 'sales.product_id', '=', 'p_top.id')
+                  ->where('p_top.product_category_id', $this->productCategoryId)
+            )
             ->select('stores.name', DB::raw('SUM(sales.amount) as total'))
             ->groupBy('stores.id', 'stores.name')
             ->orderByDesc('total')
@@ -185,17 +206,19 @@ class SalesDashboard extends Component
         );
 
         return view('livewire.sales-dashboard', [
-            'sales'     => $sales,
-            'stats'     => $stats,
-            'branches'  => Branch::all(),
-            'allStores' => Store::with('branch')->orderBy('name')->get(),
+            'sales'             => $sales,
+            'stats'             => $stats,
+            'branches'          => Branch::all(),
+            'allStores'         => Store::with('branch')->orderBy('name')->get(),
+            'allProducts'       => Product::with('category')->orderBy('name')->get(),
+            'productCategories' => ProductCategory::orderBy('name')->get(),
         ]);
     }
 
     public function create()
     {
         $this->resetValidation();
-        $this->reset(['saleId', 'storeId', 'amount', 'transactionDate']);
+        $this->reset(['saleId', 'storeId', 'productId', 'amount', 'transactionDate']);
         $this->transactionDate = now()->format('Y-m-d\TH:i');
         $this->isEditMode = false;
         $this->showModal  = true;
@@ -206,6 +229,7 @@ class SalesDashboard extends Component
         $this->resetValidation();
         $this->saleId          = $sale->id;
         $this->storeId         = $sale->store_id;
+        $this->productId       = $sale->product_id ?? '';
         $this->amount          = $sale->amount;
         $this->transactionDate = $sale->transaction_date->format('Y-m-d\TH:i');
         $this->isEditMode      = true;
@@ -216,24 +240,24 @@ class SalesDashboard extends Component
     {
         $this->validate([
             'storeId'         => 'required|exists:stores,id',
+            'productId'       => 'nullable|exists:products,id',
             'amount'          => 'required|numeric|min:0',
             'transactionDate' => 'required|date',
         ]);
 
+        $data = [
+            'store_id'         => $this->storeId,
+            'product_id'       => $this->productId ?: null,
+            'amount'           => $this->amount,
+            'transaction_date' => $this->transactionDate,
+        ];
+
         if ($this->isEditMode) {
-            Sale::findOrFail($this->saleId)->update([
-                'store_id'         => $this->storeId,
-                'amount'           => $this->amount,
-                'transaction_date' => $this->transactionDate,
-            ]);
-            session()->flash('message', 'Sale updated successfully.');
+            Sale::findOrFail($this->saleId)->update($data);
+            $this->dispatch('toast', message: 'Sale updated successfully.', type: 'success');
         } else {
-            Sale::create([
-                'store_id'         => $this->storeId,
-                'amount'           => $this->amount,
-                'transaction_date' => $this->transactionDate,
-            ]);
-            session()->flash('message', 'Sale created successfully.');
+            Sale::create($data);
+            $this->dispatch('toast', message: 'Sale created successfully.', type: 'success');
         }
 
         $this->showModal = false;
@@ -242,6 +266,6 @@ class SalesDashboard extends Component
     public function delete(Sale $sale)
     {
         $sale->delete();
-        session()->flash('message', 'Sale deleted successfully.');
+        $this->dispatch('toast', message: 'Sale deleted successfully.', type: 'success');
     }
 }

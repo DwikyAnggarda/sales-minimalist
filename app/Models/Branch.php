@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Branch extends Model
 {
@@ -12,5 +13,10 @@ class Branch extends Model
     public function stores(): HasMany
     {
         return $this->hasMany(Store::class);
+    }
+
+    public function sales(): HasManyThrough
+    {
+        return $this->hasManyThrough(Sale::class, Store::class);
     }
 }

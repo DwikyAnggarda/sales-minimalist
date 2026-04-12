@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="cupcake">
 
 <head>
     <meta charset="utf-8">
@@ -15,16 +15,14 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
-    <!-- Basic Theme Init Script -->
+    <!-- Theme Init (runs before paint to prevent flash) -->
     <script>
-        // Init theme from localStorage
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            document.documentElement.classList.remove('dark');
-        }
+        (function() {
+            var saved = localStorage.getItem('theme');
+            var isDark = saved === 'forest' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.setAttribute('data-theme', isDark ? 'forest' : 'cupcake');
+            document.documentElement.classList.toggle('dark', isDark);
+        })();
     </script>
 </head>
 
@@ -53,17 +51,16 @@
                     <!-- Theme Toggle -->
                     <label
                         class="swap swap-rotate btn btn-ghost btn-circle btn-sm sm:btn-md text-base-content/70 hover:text-base-content">
-                        <!-- this hidden checkbox controls the state -->
-                        <input type="checkbox" class="theme-controller" id="theme-toggle" />
+                        <input type="checkbox" id="theme-toggle" />
 
-                        <!-- sun icon -->
+                        <!-- sun icon (shown when NOT checked = light mode) -->
                         <svg class="swap-off fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24">
                             <path
                                 d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
                         </svg>
 
-                        <!-- moon icon -->
+                        <!-- moon icon (shown when checked = dark mode) -->
                         <svg class="swap-on fill-current w-5 h-5" xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 24 24">
                             <path
@@ -145,7 +142,7 @@
                 class="w-72 h-full bg-base-100 border-r border-base-200 text-base-content shadow-[1px_0_2px_rgba(0,0,0,0.03)] relative flex flex-col transition-colors duration-300">
                 <!-- Branding -->
                 <div class="flex items-center gap-3 p-6 border-b border-base-200/60">
-                    <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-sm shadow-blue-600/20">
+                    <div class="bg-primary text-primary-content p-2.5 rounded-xl shadow-sm shadow-primary/20">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -161,8 +158,8 @@
                         <li class="menu-title text-xs font-bold opacity-50 tracking-widest uppercase mb-2">Main Menu
                         </li>
                         <li>
-                            <a href="{{ route('dashboard') ?? '#' }}"
-                                class="{{ request()->routeIs('dashboard') ? 'active bg-blue-600/10 text-blue-600 font-medium' : 'hover:bg-base-200/50 text-base-content/80' }} rounded-xl py-3"
+                            <a href="{{ route('dashboard') }}"
+                                class="{{ request()->routeIs('dashboard') ? 'active bg-primary/10 text-primary font-medium' : 'hover:bg-base-200/50 text-base-content/80' }} rounded-xl py-3"
                                 wire:navigate>
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-80" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
@@ -172,33 +169,104 @@
                                 Analytics
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('daily-sales') }}"
+                                class="{{ request()->routeIs('daily-sales') ? 'active bg-primary/10 text-primary font-medium' : 'hover:bg-base-200/50 text-base-content/80' }} rounded-xl py-3"
+                                wire:navigate>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-80" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Daily Sales
+                            </a>
+                        </li>
+
+                        <li class="menu-title text-xs font-bold opacity-50 tracking-widest uppercase mb-2 mt-6">Master Data
+                        </li>
+                        <li>
+                            <a href="{{ route('products') }}"
+                                class="{{ request()->routeIs('products') ? 'active bg-primary/10 text-primary font-medium' : 'hover:bg-base-200/50 text-base-content/80' }} rounded-xl py-3"
+                                wire:navigate>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-80" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                </svg>
+                                Products
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
+    {{-- Toast Container (fixed position, outside main content flow) --}}
+    <div id="toast-container" class="toast toast-top toast-end z-[9999] fixed top-4 right-4"></div>
+
     @livewireScripts
     <script>
-        // Setup theme toggle listener dynamically via DaisyUI themeController or manually
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggle = document.getElementById('theme-toggle');
-            if (document.documentElement.getAttribute('data-theme') === 'dark') {
-                toggle.checked = true;
+        // ── Theme Toggle ────────────────────────────────────────────────────
+        function syncToggle() {
+            var toggle = document.getElementById('theme-toggle');
+            if (toggle) toggle.checked = (document.documentElement.getAttribute('data-theme') === 'forest');
+        }
+        function handleThemeChange(e) {
+            var theme = e.target.checked ? 'forest' : 'cupcake';
+            document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.classList.toggle('dark', e.target.checked);
+            localStorage.setItem('theme', theme);
+        }
+        function initThemeToggle() {
+            var toggle = document.getElementById('theme-toggle');
+            if (!toggle) return;
+            syncToggle();
+            toggle.removeEventListener('change', handleThemeChange);
+            toggle.addEventListener('change', handleThemeChange);
+        }
+        // Re-apply saved theme on SPA navigation (fixes dark mode reset)
+        function reapplyTheme() {
+            var saved = localStorage.getItem('theme');
+            var isDark = saved === 'forest' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.setAttribute('data-theme', isDark ? 'forest' : 'cupcake');
+            document.documentElement.classList.toggle('dark', isDark);
+            syncToggle();
+        }
+        document.addEventListener('DOMContentLoaded', function() { reapplyTheme(); initThemeToggle(); });
+        document.addEventListener('livewire:navigated', function() { reapplyTheme(); initThemeToggle(); });
+
+        // ── Toast System (single listener, no duplicates) ───────────────────
+        (function() {
+            function showToast(message, type) {
+                var container = document.getElementById('toast-container');
+                if (!container) return;
+
+                // Clear any existing toasts first (only 1 toast at a time)
+                container.innerHTML = '';
+
+                var bgClass = type === 'success' ? 'bg-success text-success-content' : 'bg-error text-error-content';
+                var icon = type === 'success' ? 'check_circle' : 'error';
+
+                var el = document.createElement('div');
+                el.className = 'alert ' + bgClass + ' shadow-lg rounded-xl text-sm font-bold flex items-center gap-2 min-w-[280px] border-none';
+                el.innerHTML = '<span class="material-symbols-outlined text-lg">' + icon + '</span><span>' + message + '</span>';
+                container.appendChild(el);
+
+                setTimeout(function() {
+                    el.style.opacity = '0';
+                    el.style.transition = 'opacity 0.3s ease';
+                    setTimeout(function() { el.remove(); }, 300);
+                }, 3000);
             }
 
-            toggle.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('theme', 'light');
-                }
+            // Register ONCE — this IIFE runs only once even with wire:navigate
+            window.addEventListener('toast', function(e) {
+                var d = e.detail;
+                var data = Array.isArray(d) ? d[0] : d;
+                showToast(data.message || 'Done', data.type || 'success');
             });
-        });
+        })();
     </script>
 </body>
 

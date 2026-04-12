@@ -16,22 +16,20 @@
             </div>
         </div>
         <div class="flex flex-wrap items-center gap-3 bg-base-200/50 rounded-xl border border-base-content/10 p-4">
-            {{-- FROM: flex-1 on mobile (fills 50%), auto on desktop --}}
+            {{-- FROM --}}
             <div class="flex flex-col flex-1 md:flex-none">
                 <label class="text-[10px] font-bold uppercase tracking-wider text-base-content/50 mb-1">From</label>
                 <input wire:model.live="startDate" type="date" class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 cursor-pointer text-base-content min-w-[120px] outline-none w-full">
             </div>
-            {{-- Separator FROM–TO: always visible --}}
             <div class="w-px h-8 bg-base-content/10 shrink-0"></div>
-            {{-- TO: flex-1 on mobile (fills 50%), auto on desktop --}}
+            {{-- TO --}}
             <div class="flex flex-col px-3 flex-1 md:flex-none">
                 <label class="text-[10px] font-bold uppercase tracking-wider text-base-content/50 mb-1">To</label>
                 <input wire:model.live="endDate" type="date" class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 cursor-pointer text-base-content min-w-[120px] outline-none w-full">
             </div>
-            {{-- Separator TO–BRANCH: hidden on mobile so BRANCH wraps to its own full-width row --}}
             <div class="w-px h-8 bg-base-content/10 shrink-0 hidden md:block"></div>
-            {{-- BRANCH: full width on mobile, auto on desktop --}}
-            <div class="flex flex-col px-3 w-full md:w-auto">
+            {{-- BRANCH --}}
+            <div class="flex flex-col px-3 flex-1 md:flex-none md:w-auto">
                 <label class="text-[10px] font-bold uppercase tracking-wider text-base-content/50 mb-1">Branch</label>
                 <select wire:model.live="branchId" class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 cursor-pointer text-base-content outline-none w-full md:w-auto">
                     <option value="">All Branches</option>
@@ -40,9 +38,19 @@
                     @endforeach
                 </select>
             </div>
-            {{-- Separator BRANCH–Reset: hidden on mobile --}}
+            <div class="w-px h-8 bg-base-content/10 shrink-0 hidden md:block"></div>
+            {{-- CATEGORY --}}
+            <div class="flex flex-col px-3 flex-1 md:flex-none md:w-auto">
+                <label class="text-[10px] font-bold uppercase tracking-wider text-base-content/50 mb-1">Category</label>
+                <select wire:model.live="productCategoryId" class="bg-transparent border-none p-0 text-sm font-semibold focus:ring-0 cursor-pointer text-base-content outline-none w-full md:w-auto">
+                    <option value="">All Categories</option>
+                    @foreach($productCategories as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="w-px h-8 bg-base-content/10 shrink-0 md:block hidden"></div>
-            {{-- Reset: full width on mobile, icon-only button on desktop --}}
+            {{-- Reset --}}
             <button wire:click="resetFilters" class="bg-base-100 hover:bg-base-300 p-2.5 rounded-lg shadow-sm transition-shadow text-primary flex items-center justify-center w-full md:w-auto" title="Reset Filters">
                 <span class="material-symbols-outlined text-xl">refresh</span>
             </button>
@@ -195,11 +203,13 @@
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left whitespace-nowrap">
+                <table id="sales-table-dashboard" class="w-full text-left whitespace-nowrap">
                     <thead>
                         <tr class="bg-base-200/30 border-b border-base-content/5">
                             <th class="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-base-content/50">Date</th>
                             <th class="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-base-content/50">Store/Branch</th>
+                            <th class="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-base-content/50">Product</th>
+                            <th class="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-base-content/50">Category</th>
                             <th class="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-base-content/50">Amount</th>
                             <th class="px-8 py-5 text-[11px] font-bold uppercase tracking-widest text-right text-base-content/50">Actions</th>
                         </tr>
@@ -223,6 +233,18 @@
                                 </div>
                             </td>
                             <td class="px-8 py-5">
+                                <p class="text-sm font-bold text-base-content">{{ $sale->product->name ?? '—' }}</p>
+                            </td>
+                            <td class="px-8 py-5">
+                                @if($sale->product && $sale->product->category)
+                                    <span class="badge badge-ghost text-xs font-bold px-3 py-2 rounded-lg bg-primary/10 text-primary border-none">
+                                        {{ $sale->product->category->name }}
+                                    </span>
+                                @else
+                                    <span class="text-base-content/40 text-xs font-medium">—</span>
+                                @endif
+                            </td>
+                            <td class="px-8 py-5">
                                 <span class="text-[15px] font-black text-base-content">Rp {{ number_format($sale->amount, 0, ',', '.') }}</span>
                             </td>
                             <td class="px-8 py-5 text-right">
@@ -238,7 +260,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="4">
+                            <td colspan="6">
                                 <div class="flex flex-col items-center justify-center py-16 text-center">
                                     <span class="material-symbols-outlined text-5xl text-base-content/20 mb-3">receipt_long</span>
                                     <p class="text-base font-bold text-base-content">No transactions found.</p>
@@ -251,10 +273,43 @@
                 </table>
             </div>
             <!-- Pagination -->
-            <div class="p-6 sm:p-8 bg-base-100 border-t border-base-content/5">
+            <div id="pagination-area-dashboard" class="p-6 sm:p-8 bg-base-100 border-t border-base-content/5">
                 {{ $sales->links() }}
             </div>
         </div>
+
+        <script>
+            (function () {
+                var _paginationClickedDashboard = false;
+
+                // Event delegation on document — survives Livewire morphing
+                document.addEventListener('click', function (e) {
+                    var paginationArea = document.getElementById('pagination-area-dashboard');
+                    if (paginationArea && paginationArea.contains(e.target)) {
+                        if (e.target.closest('a, button, span[wire\\:click], nav')) {
+                            _paginationClickedDashboard = true;
+                        }
+                    }
+                }, true);
+
+                // Livewire v4 commit hook — fires after every server roundtrip
+                document.addEventListener('livewire:initialized', function () {
+                    Livewire.hook('commit', function (ref) {
+                        ref.succeed(function () {
+                            if (_paginationClickedDashboard) {
+                                _paginationClickedDashboard = false;
+                                setTimeout(function () {
+                                    var table = document.getElementById('sales-table-dashboard');
+                                    if (table) {
+                                        table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    }
+                                }, 80);
+                            }
+                        });
+                    });
+                });
+            })();
+        </script>
 
         <!-- Modal Form (Create/Edit) -->
         <input type="checkbox" id="transaction-modal" class="modal-toggle" wire:model.live="showModal" />
@@ -279,6 +334,17 @@
                             @endforeach
                         </select>
                         @error('storeId') <span class="text-error text-xs font-bold mt-1.5">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="text-[11px] font-bold uppercase tracking-widest text-base-content/60 mb-2">Product</label>
+                        <select wire:model="productId" class="select select-bordered select-md w-full bg-base-50 focus:border-primary text-base-content">
+                            <option value="">Select a product (optional)...</option>
+                            @foreach($allProducts as $product)
+                                <option value="{{ $product->id }}">{{ $product->name }} ({{ $product->category->name ?? '-' }})</option>
+                            @endforeach
+                        </select>
+                        @error('productId') <span class="text-error text-xs font-bold mt-1.5">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="flex flex-col">
