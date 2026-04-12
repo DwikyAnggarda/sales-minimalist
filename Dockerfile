@@ -12,9 +12,16 @@ RUN apk add --no-cache \
     curl \
     oniguruma-dev \
     nodejs \
-    npm
+    npm \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev
 
 # Install PHP extensions
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg
+
 RUN docker-php-ext-install \
     pdo \
     pdo_pgsql \
@@ -22,7 +29,8 @@ RUN docker-php-ext-install \
     zip \
     mbstring \
     bcmath \
-    opcache
+    opcache \
+    gd
 
 # Install Redis extension (untuk Predis, ini opsional tapi recommended)
 # RUN pecl install redis && docker-php-ext-enable redis
